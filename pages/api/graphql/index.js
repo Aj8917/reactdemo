@@ -1,4 +1,4 @@
-import { graphqlHTTP } from "express-graphql";
+import { graphqlHTTP } from 'express-graphql';
 import { makeExecutableSchema } from "@graphql-tools/schema";
 import { addMocksToSchema } from "@graphql-tools/mock";
 
@@ -7,17 +7,30 @@ const typeDefs =/* GraphQL*/ `
         id:Int!
         title : String!
         thumbnail : String!
-        Price : Float
+        price : Float
+        category: Category
     }
 
+    type Category{
+        id:Int!
+        title:String!
+    }
     type Query{
         product : Product
         products(limit : Int) : [Product]
+        categories: [Category]
     }
 `;
-
+const mocks= {
+    Int: () =>Math.floor(Math.random()*99)+1,
+    Float:() =>(Math.random()*99.0+1.0).toFixed(2),
+    Product: () => ({
+        thumbnail: () => 'https://picsum.photos/400/400'
+        }),
+};
 const executableSchema =addMocksToSchema({
-    schema: makeExecutableSchema({typeDefs,})
+    schema: makeExecutableSchema({typeDefs,}),
+    mocks,
 });
 
 function runMiddleware(req , res, fn)
