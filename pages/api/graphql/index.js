@@ -10,7 +10,12 @@ const typeDefs =/* GraphQL*/ `
         price : Float
         category: Category
     }
-
+  
+   type Cart{
+            count: Int 
+            products:[Product]
+            complete :Boolean
+   }
     type Category{
         id:Int!
         title:String!
@@ -19,8 +24,14 @@ const typeDefs =/* GraphQL*/ `
         product : Product
         products(limit : Int) : [Product]
         categories: [Category]
+        cart : Cart
     }
 `;
+let cart = {
+    count: 0,
+    products: [],
+    complete: false,
+    };
 const mocks= {
     Int: () =>Math.floor(Math.random()*99)+1,
     Float:() =>(Math.random()*99.0+1.0).toFixed(2),
