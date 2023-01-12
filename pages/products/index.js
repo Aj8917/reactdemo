@@ -35,7 +35,7 @@ function Products() {
            <ProductItemsWrapper>
              {
               data && data.products &&data.products.map((product)=>(
-              <ProductItem key={product.id} data={product} />
+              <ProductItem key={product.id} data={product} addToCart/>
               ))
              }
             </ProductItemsWrapper>

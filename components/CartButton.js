@@ -1,5 +1,6 @@
 import { useQuery, gql } from '@apollo/client';
 import Button from './Button';
+
 export const GET_CART_TOTAL = gql`
  query getCart {
  cart {
