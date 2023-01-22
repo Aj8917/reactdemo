@@ -2,8 +2,16 @@ import styled from 'styled-components';
 import SubHeader from '../../components/SubHeader';
 import ProductItem from '../../components/ProductItem';
 import Button from '../../components/Button';
-import { useQuery,gql } from '@apollo/client';
+import { useQuery,useMutation,gql } from '@apollo/client';
+import { useRouter } from 'next/router';
 
+const COMPLETE_CART =gql`
+                    mutation completeCart{
+                      completeCart{
+                        complete
+                      }
+                    }
+                `;
 const GET_CART =gql`
     query getCart{
                  cart{
@@ -33,6 +41,8 @@ const CartItemsWrapper = styled.div`
 
 function Cart() {
   const {loading ,data} =useQuery(GET_CART);
+  const [completeCart]= useMutation(COMPLETE_CART);
+
   return (
     <>
       <SubHeader title='Cart' />
@@ -48,8 +58,18 @@ function Cart() {
       
         </CartItemsWrapper>
         {
-          data && data.cart.products.length > 0 && (
-            <Button backgroundColor='royalBlue'>
+          data && data.cart.products.length > 0 && 
+            sessionStorage.getItem('token') && (
+            <Button backgroundColor='royalBlue'
+             onClick={()=>{
+              const isAuthenticated =sessionStorage.getItem('token');
+              if(isAuthenticated)
+              {
+                completeCard();
+              }
+             }}
+            
+            >
                Checkout
             </Button>
           ) 
