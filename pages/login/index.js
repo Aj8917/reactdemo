@@ -1,8 +1,23 @@
-import { useState } from 'react';
+import { useState ,useEffect} from 'react';
 import styled from 'styled-components';
 import Button from '../../components/Button';
 import FormItem from '../../components/FormItem';
 import SubHeader from '../../components/SubHeader';
+import { useMutation,gql } from '@apollo/client';
+import { useRouter } from 'next/router';
+
+
+const LOGIN_USER=gql`
+    mutation loginUser($username: String! ,$pasword: String!)
+    {
+      loginUser(username: $username, password :$password)
+      {
+        username
+        token
+      }
+    }
+`;
+
 
 const FormWrapper = styled.div`
   display: flex;
@@ -15,11 +30,27 @@ function Login() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
+const [loginUser ,{data}]=useMutation(LOGIN_USER);
+const router =useRouter();
+
+useEffect(()=>{
+  if(data && data.loginUser && data.loginUser.token){
+    sessionStorage.setItem('token',data.loginUser.token);
+    router.push('/');
+  }
+},[data]
+);//useEffect
   return (
     <>
       <SubHeader title='Login' />
       <FormWrapper>
-        <form>
+        <form
+           onSubmit={(e)=>{
+              e.preventDefault();
+              loginUser({variables :{username,password}});
+             }}
+        >
+          
           <FormItem
             id='username'
             label='Username'

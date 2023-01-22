@@ -1,7 +1,7 @@
 import { graphqlHTTP } from 'express-graphql';
 import { makeExecutableSchema } from "@graphql-tools/schema";
 import { addMocksToSchema } from "@graphql-tools/mock";
-
+import { loginUser ,isTokenValid } from "../../../utils/authentication";
 const typeDefs =/* GraphQL*/ `
     type Product{
         id:Int!
@@ -29,6 +29,12 @@ const typeDefs =/* GraphQL*/ `
 
     type Mutation {
          addToCart(productId : Int!) :Cart
+         loginUser(username:String! , password:String!):
+          User
+    }
+    type User{
+        username : String!
+        token    : String!
     }
 `;
 
@@ -38,6 +44,17 @@ const resolvers ={
         cart :()=>cart,
     },
     Mutation :{
+
+
+                loginUser:async(_,{username ,password})=>
+                {
+                    const user =loginUser(username,password
+                        );
+                    if(user)
+                    {
+                        return user;
+                    }
+                }, //loginuser
                 addToCart:(_,{productId})=>{
                         cart={
                             ...cart,
